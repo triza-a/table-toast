@@ -85,7 +85,7 @@ const MenuManagement = () => {
                     <Input placeholder="e.g., Margherita Pizza" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Price ($)</Label>
+                    <Label>Price (NRs)</Label>
                     <Input type="number" placeholder="12.99" />
                   </div>
                 </div>
@@ -130,7 +130,7 @@ const MenuManagement = () => {
                       {item.category}
                     </Badge>
                   </div>
-                  <div className="text-xl font-bold text-primary">${item.price}</div>
+                  <div className="text-xl font-bold text-primary">NRs {item.price}</div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
