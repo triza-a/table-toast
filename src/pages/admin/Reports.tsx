@@ -54,7 +54,7 @@ const Reports = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-success">${totalRevenue.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-success">NRs {totalRevenue.toLocaleString()}</div>
               <p className="text-xs text-success flex items-center gap-1 mt-2">
                 <TrendingUp className="w-3 h-3" />
                 +12.5% from last period
@@ -67,7 +67,7 @@ const Reports = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Expenses</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-destructive">${totalExpenses.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-destructive">NRs {totalExpenses.toLocaleString()}</div>
               <p className="text-xs text-destructive flex items-center gap-1 mt-2">
                 <TrendingUp className="w-3 h-3" />
                 +8.3% from last period
@@ -80,7 +80,7 @@ const Reports = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">Net Profit</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-primary">${profit.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-primary">NRs {profit.toLocaleString()}</div>
               <p className="text-xs text-success flex items-center gap-1 mt-2">
                 <TrendingUp className="w-3 h-3" />
                 +18.2% from last period
@@ -136,7 +136,7 @@ const Reports = () => {
                     <TableCell className={`text-right font-medium ${
                       transaction.amount > 0 ? "text-success" : "text-destructive"
                     }`}>
-                      ${Math.abs(transaction.amount).toFixed(2)}
+                      NRs {Math.abs(transaction.amount).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))}

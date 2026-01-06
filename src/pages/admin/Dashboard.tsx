@@ -6,8 +6,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const Dashboard = () => {
   // Dummy data
   const stats = [
-    { title: "Today's Sales", value: "$2,450", icon: DollarSign, change: "+12.5%", trend: "up" },
-    { title: "Weekly Sales", value: "$15,240", icon: TrendingUp, change: "+8.2%", trend: "up" },
+    { title: "Today's Sales", value: "NRs 2,450", icon: DollarSign, change: "+12.5%", trend: "up" },
+    { title: "Weekly Sales", value: "NRs 15,240", icon: TrendingUp, change: "+8.2%", trend: "up" },
     { title: "Orders Today", value: "142", icon: UtensilsCrossed, change: "+5.4%", trend: "up" },
     { title: "Active Staff", value: "12/15", icon: Users, change: "3 on leave", trend: "neutral" },
   ];

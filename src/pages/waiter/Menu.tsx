@@ -125,7 +125,7 @@ const Menu = () => {
                       {item.category}
                     </Badge>
                   </div>
-                  <div className="text-xl font-bold text-primary">${item.price}</div>
+                  <div className="text-xl font-bold text-primary">NRs {item.price}</div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
