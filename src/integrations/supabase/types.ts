@@ -14,7 +14,150 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inventory: {
+        Row: {
+          created_at: string
+          current_stock: number
+          id: string
+          ingredient: string
+          min_stock: number
+          status: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_stock?: number
+          id?: string
+          ingredient: string
+          min_stock?: number
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_stock?: number
+          id?: string
+          ingredient?: string
+          min_stock?: number
+          status?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      menu_items: {
+        Row: {
+          allergens: string[] | null
+          available: boolean
+          category: string
+          created_at: string
+          id: string
+          ingredients: string | null
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          allergens?: string[] | null
+          available?: boolean
+          category: string
+          created_at?: string
+          id?: string
+          ingredients?: string | null
+          name: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          allergens?: string[] | null
+          available?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          ingredients?: string | null
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          allergies: string[] | null
+          created_at: string
+          id: string
+          items: Json
+          special_instructions: string | null
+          status: string
+          subtotal: number
+          table_number: number
+          tax: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          allergies?: string[] | null
+          created_at?: string
+          id?: string
+          items?: Json
+          special_instructions?: string | null
+          status?: string
+          subtotal?: number
+          table_number: number
+          tax?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          allergies?: string[] | null
+          created_at?: string
+          id?: string
+          items?: Json
+          special_instructions?: string | null
+          status?: string
+          subtotal?: number
+          table_number?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      staff: {
+        Row: {
+          contact: string | null
+          created_at: string
+          id: string
+          name: string
+          role: string
+          shift: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          contact?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          role: string
+          shift: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          contact?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          role?: string
+          shift?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

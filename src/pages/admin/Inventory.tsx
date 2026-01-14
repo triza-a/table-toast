@@ -1,22 +1,16 @@
+import { useState } from "react";
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Package, Plus } from "lucide-react";
+import { AlertTriangle, Package, Plus, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useInventory } from "@/hooks/useInventory";
 
 const Inventory = () => {
-  const inventoryItems = [
-    { id: 1, name: "Tomatoes", quantity: 2, unit: "kg", minStock: 10, status: "critical" },
-    { id: 2, name: "Mozzarella Cheese", quantity: 5, unit: "kg", minStock: 8, status: "low" },
-    { id: 3, name: "Olive Oil", quantity: 1, unit: "L", minStock: 3, status: "critical" },
-    { id: 4, name: "Pasta", quantity: 25, unit: "kg", minStock: 15, status: "good" },
-    { id: 5, name: "Chicken Breast", quantity: 18, unit: "kg", minStock: 10, status: "good" },
-    { id: 6, name: "Lettuce", quantity: 7, unit: "kg", minStock: 5, status: "good" },
-    { id: 7, name: "Parmesan", quantity: 4, unit: "kg", minStock: 6, status: "low" },
-    { id: 8, name: "Flour", quantity: 30, unit: "kg", minStock: 20, status: "good" },
-  ];
+  const { inventory, loading, updateInventoryItem } = useInventory();
+  const [addQuantities, setAddQuantities] = useState<Record<string, string>>({});
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -31,8 +25,27 @@ const Inventory = () => {
     }
   };
 
-  const criticalCount = inventoryItems.filter((item) => item.status === "critical").length;
-  const lowCount = inventoryItems.filter((item) => item.status === "low").length;
+  const handleAddStock = async (id: string, currentStock: number) => {
+    const addQty = parseInt(addQuantities[id] || "0");
+    if (addQty > 0) {
+      await updateInventoryItem(id, { current_stock: currentStock + addQty });
+      setAddQuantities((prev) => ({ ...prev, [id]: "" }));
+    }
+  };
+
+  const criticalCount = inventory.filter((item) => item.status === "critical").length;
+  const lowCount = inventory.filter((item) => item.status === "low").length;
+  const goodCount = inventory.filter((item) => item.status === "good").length;
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
@@ -84,9 +97,7 @@ const Inventory = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-success">
-                {inventoryItems.filter((item) => item.status === "good").length}
-              </div>
+              <div className="text-3xl font-bold text-success">{goodCount}</div>
               <p className="text-xs text-muted-foreground">Above minimum level</p>
             </CardContent>
           </Card>
@@ -105,26 +116,38 @@ const Inventory = () => {
                   <TableHead>Current Stock</TableHead>
                   <TableHead>Min. Stock</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Action</TableHead>
+                  <TableHead>Add Stock</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {inventoryItems.map((item) => (
+                {inventory.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
+                    <TableCell className="font-medium">{item.ingredient}</TableCell>
                     <TableCell>
-                      {item.quantity} {item.unit}
+                      {item.current_stock} {item.unit}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {item.minStock} {item.unit}
+                      {item.min_stock} {item.unit}
                     </TableCell>
                     <TableCell>{getStatusBadge(item.status)}</TableCell>
                     <TableCell>
-                      <Input
-                        type="number"
-                        placeholder="Add qty"
-                        className="w-24"
-                      />
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          placeholder="Qty"
+                          className="w-20"
+                          value={addQuantities[item.id] || ""}
+                          onChange={(e) =>
+                            setAddQuantities((prev) => ({ ...prev, [item.id]: e.target.value }))
+                          }
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => handleAddStock(item.id, item.current_stock)}
+                        >
+                          Add
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -3,24 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Plus, UserCheck, UserX, Calendar } from "lucide-react";
+import { Plus, UserCheck, UserX, Calendar, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useStaff } from "@/hooks/useStaff";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Staff = () => {
-  const staffMembers = [
-    { id: 1, name: "John Doe", role: "Chef", status: "present", shift: "Morning", contact: "john@restaurant.com" },
-    { id: 2, name: "Jane Smith", role: "Waiter", status: "present", shift: "Morning", contact: "jane@restaurant.com" },
-    { id: 3, name: "Mike Wilson", role: "Waiter", status: "present", shift: "Evening", contact: "mike@restaurant.com" },
-    { id: 4, name: "Sarah Connor", role: "Chef", status: "leave", shift: "Morning", contact: "sarah@restaurant.com" },
-    { id: 5, name: "Tom Hardy", role: "Manager", status: "present", shift: "Full Day", contact: "tom@restaurant.com" },
-    { id: 6, name: "Emma Watson", role: "Waiter", status: "leave", shift: "Evening", contact: "emma@restaurant.com" },
-    { id: 7, name: "Chris Evans", role: "Chef", status: "absent", shift: "Evening", contact: "chris@restaurant.com" },
-    { id: 8, name: "Lisa Ray", role: "Waiter", status: "present", shift: "Morning", contact: "lisa@restaurant.com" },
-  ];
+  const { staff, loading, updateStaffMember } = useStaff();
 
-  const presentCount = staffMembers.filter((s) => s.status === "present").length;
-  const leaveCount = staffMembers.filter((s) => s.status === "leave").length;
-  const absentCount = staffMembers.filter((s) => s.status === "absent").length;
+  const presentCount = staff.filter((s) => s.status === "present").length;
+  const leaveCount = staff.filter((s) => s.status === "leave").length;
+  const absentCount = staff.filter((s) => s.status === "absent").length;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -42,6 +41,20 @@ const Staff = () => {
       .join("")
       .toUpperCase();
   };
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    await updateStaffMember(id, { status: newStatus });
+  };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
@@ -100,7 +113,7 @@ const Staff = () => {
               <CardTitle className="text-sm font-medium">Total Staff</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{staffMembers.length}</div>
+              <div className="text-3xl font-bold">{staff.length}</div>
             </CardContent>
           </Card>
         </div>
@@ -123,26 +136,36 @@ const Staff = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {staffMembers.map((staff) => (
-                  <TableRow key={staff.id}>
+                {staff.map((member) => (
+                  <TableRow key={member.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar>
                           <AvatarFallback className="bg-primary text-primary-foreground">
-                            {getInitials(staff.name)}
+                            {getInitials(member.name)}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="font-medium">{staff.name}</span>
+                        <span className="font-medium">{member.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{staff.role}</TableCell>
-                    <TableCell>{staff.shift}</TableCell>
-                    <TableCell className="text-muted-foreground">{staff.contact}</TableCell>
-                    <TableCell>{getStatusBadge(staff.status)}</TableCell>
+                    <TableCell>{member.role}</TableCell>
+                    <TableCell>{member.shift}</TableCell>
+                    <TableCell className="text-muted-foreground">{member.contact}</TableCell>
+                    <TableCell>{getStatusBadge(member.status)}</TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
+                      <Select
+                        value={member.status}
+                        onValueChange={(value) => handleStatusChange(member.id, value)}
+                      >
+                        <SelectTrigger className="w-[120px]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="present">Present</SelectItem>
+                          <SelectItem value="leave">On Leave</SelectItem>
+                          <SelectItem value="absent">Absent</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                   </TableRow>
                 ))}
